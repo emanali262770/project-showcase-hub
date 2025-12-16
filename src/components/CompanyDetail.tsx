@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
     categories,
@@ -9,12 +9,53 @@ import {
     distributionFeatures,
 } from "@/data/softwareData";
 import { companyLogos } from "@/data/companyLogos";
-import { CheckCircle, Shield, Users, ExternalLink, Zap, BarChart, Lock, Package, Phone, CreditCard, Cpu, Truck } from "lucide-react";
+import { CheckCircle, Shield, Users, ExternalLink, Zap, BarChart, Lock, Package, Phone, CreditCard, Cpu, Truck, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const companyMap = {
     "infinity-byte": "Infinity Byte",
     "core-tech": "Core Tech",
     "sky-links": "Sky Links",
+};
+const mobileDemoImagesMap = {
+    pos: [
+
+        "/assets/POS-mobile/pos1.jpeg",
+        "/assets/POS-mobile/pos4.jpeg",
+        "/assets/POS-mobile/pos2.jpeg",
+        "/assets/POS-mobile/pos3.jpeg",
+
+    ],
+    erp: [
+        "/assets/dis/dis1.jpg",
+        "/assets/dis/dis2.jpg",
+        "/assets/dis/dis3.jpg",
+        "/assets/dis/dis4.jpg",
+        "/assets/dis/dis5.jpg",
+    ],
+    ecommerce: [
+        "/assets/ecom/ecom1.jpg",
+        "/assets/ecom/ecom2.jpg",
+        "/assets/ecom/ecom3.jpg",
+        "/assets/ecom/ecom4.jpg",
+
+    ],
+    calllogs: [
+        "/crm-mobile/1.jpeg",
+        "/crm-mobile/2.jpeg",
+        "/crm-mobile/3.jpeg",
+        "/crm-mobile/4.jpeg",
+        "/crm-mobile/5.jpeg",
+        "/crm-mobile/6.jpeg",
+        "/crm-mobile/7.jpeg",
+        "/crm-mobile/8.jpeg",
+    ],
+    // distribution: [
+    //     "/assets/dis/dis1.jpg",
+    //     "/assets/dis/dis2.jpg",
+    //     "/assets/dis/dis3.jpg",
+    //     "/assets/dis/dis4.jpg",
+    //     "/assets/dis/dis5.jpg",
+    // ],
 };
 
 const categoryStyles = {
@@ -74,6 +115,99 @@ const featureMap = {
     distribution: distributionFeatures,
 };
 
+
+
+// Carousel Component
+const MobileDemoCarousel = ({ isOpen, onClose, images }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        setCurrentIndex(0);
+    }, [images, isOpen]);
+
+
+    const goToPrevious = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === 0 ? images.length - 1 : prevIndex - 1
+        );
+    };
+
+    const goToNext = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        );
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <div className="relative  rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl">
+                {/* Header with close button */}
+                <div className="sticky top-0 z-10 flex items-center justify-between p-4  ">
+                    <h3 className="text-lg font-semibold text-white">
+                        Mobile App Screenshots
+                    </h3>
+                    <button
+                        onClick={onClose}
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                        <X className="h-5 w-5 text-gray-600" />
+                    </button>
+                </div>
+
+                {/* Carousel Content */}
+                <div className="p-4 md:p-8">
+                    {/* Image Container */}
+                    <div className="relative h-96 md:h-[500px] flex items-center justify-center">
+                        <img
+                            src={images[currentIndex]}
+                            alt={`Mobile screen ${currentIndex + 1}`}
+                            className="h-[600px] object-contain rounded-lg shadow-lg"
+                        />
+
+                        {/* Navigation Buttons */}
+                        <button
+                            onClick={goToPrevious}
+                            className="absolute left-4 top-1/2 transform -translate-y-1/2 p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:shadow-xl transition-all"
+                        >
+                            <ChevronLeft className="h-6 w-6 text-gray-700" />
+                        </button>
+
+                        <button
+                            onClick={goToNext}
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:shadow-xl transition-all"
+                        >
+                            <ChevronRight className="h-6 w-6 text-gray-700" />
+                        </button>
+                    </div>
+
+                    {/* Image Indicators */}
+                    <div className="flex justify-center mt-20 space-x-2">
+                        {images.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentIndex(index)}
+                                className={`h-2 rounded-full transition-all duration-300 ${index === currentIndex
+                                    ? "w-8 bg-blue-600"
+                                    : "w-2 bg-gray-300 hover:bg-gray-400"
+                                    }`}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Image Counter */}
+                    <div className="text-center mt-4 text-gray-600">
+                        <span className="font-medium">{currentIndex + 1}</span>
+                        <span className="mx-2">/</span>
+                        <span>{images.length}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // Tab Component
 const SystemTabs = ({ systems, activeSystem, onTabClick }) => {
     return (
@@ -82,7 +216,7 @@ const SystemTabs = ({ systems, activeSystem, onTabClick }) => {
                 const style = categoryStyles[system.categoryId];
                 const IconComponent = style.icon;
                 const isActive = activeSystem === system.categoryId;
-                
+
                 return (
                     <button
                         key={index}
@@ -90,8 +224,8 @@ const SystemTabs = ({ systems, activeSystem, onTabClick }) => {
                         className={`
                             flex items-center gap-3 px-6 py-3 rounded-xl font-medium whitespace-nowrap
                             transition-all duration-200 transform hover:scale-105
-                            ${isActive 
-                                ? `${style.bg} border-2 ${style.border} text-gray-900 shadow-lg` 
+                            ${isActive
+                                ? `${style.bg} border-2 ${style.border} text-gray-900 shadow-lg`
                                 : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:shadow-md'
                             }
                         `}
@@ -114,6 +248,7 @@ const CompanyDetails = () => {
     const { companySlug } = useParams();
     const companyName = companyMap[companySlug];
     const [activeTab, setActiveTab] = useState(null);
+    const [isMobileDemoOpen, setIsMobileDemoOpen] = useState(false);
 
     // Get all systems for this company
     const allSystems = categories.flatMap((cat) =>
@@ -130,11 +265,14 @@ const CompanyDetails = () => {
     // Set first system as active by default
     const defaultSystem = allSystems[0]?.categoryId;
     const activeSystemId = activeTab || defaultSystem;
-    
+
     // Get the active system data
     const activeSystem = allSystems.find(s => s.categoryId === activeSystemId);
     const style = activeSystem ? categoryStyles[activeSystem.categoryId] : categoryStyles.ecommerce;
     const features = activeSystem ? featureMap[activeSystem.categoryId] : ecommerceFeatures;
+    const mobileDemoImages =
+        mobileDemoImagesMap[activeSystem?.categoryId] || [];
+
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -144,8 +282,8 @@ const CompanyDetails = () => {
                     <div className="flex flex-col md:flex-row items-center justify-between gap-8">
                         <div className="flex items-center gap-6">
                             <div className="p-4 rounded-2xl shadow-xl">
-                                <img 
-                                    src={companyLogos[companyName]} 
+                                <img
+                                    src={companyLogos[companyName]}
                                     className="h-24 w-24 object-contain"
                                     alt={`${companyName} Logo`}
                                 />
@@ -175,7 +313,7 @@ const CompanyDetails = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
                 <div className="mb-6">
                     <h2 className="text-xl font-bold text-gray-900 mb-4">Available Systems</h2>
-                    <SystemTabs 
+                    <SystemTabs
                         systems={allSystems}
                         activeSystem={activeSystemId}
                         onTabClick={setActiveTab}
@@ -188,7 +326,7 @@ const CompanyDetails = () => {
                         className={`${style.bg} rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl`}
                     >
                         <div className={`h-1 w-full bg-gradient-to-r ${style.gradient}`} />
-                        
+
                         <div className="p-8">
                             {/* Header */}
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -205,15 +343,27 @@ const CompanyDetails = () => {
                                         </p>
                                     </div>
                                 </div>
-                                <a
-                                    href={activeSystem.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="group flex items-center gap-2 px-6 py-3 rounded-xl bg-white border border-gray-200 text-gray-800 font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
-                                >
-                                    <span>Live Demo</span>
-                                    <ExternalLink className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                                </a>
+                                <div className="flex gap-3">
+                                    <a
+                                        href={activeSystem.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group flex items-center gap-2 px-6 py-3 rounded-xl bg-white border border-gray-200 text-gray-800 font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
+                                    >
+                                        <span>Live Demo</span>
+                                        <ExternalLink className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                    </a>
+                                    {mobileDemoImages.length > 0 && (
+                                        <button
+                                            onClick={() => setIsMobileDemoOpen(true)}
+                                            className="group flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
+                                        >
+                                            <span>Mobile Demo</span>
+                                            <Phone className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                                        </button>
+                                    )}
+
+                                </div>
                             </div>
 
                             {/* Content */}
@@ -326,7 +476,7 @@ const CompanyDetails = () => {
                                             </h5>
                                         </div>
                                         <p className="text-gray-700 text-sm">
-                                            All listed systems receive complete development with secure payment 
+                                            All listed systems receive complete development with secure payment
                                             gateway integration, ensuring reliable and seamless financial transactions.
                                         </p>
                                     </div>
@@ -349,6 +499,13 @@ const CompanyDetails = () => {
                     </div>
                 )}
             </div>
+
+            {/* Mobile Demo Carousel Popup */}
+            <MobileDemoCarousel
+                isOpen={isMobileDemoOpen}
+                onClose={() => setIsMobileDemoOpen(false)}
+                images={mobileDemoImages}
+            />
         </div>
     );
 };

@@ -142,7 +142,7 @@ export const categories: Category[] = [
   },
   {
     id: 'calllogs',
-    title: 'Call Logs',
+    title: 'CRM',
     icon: 'Phone',
     description: 'Comprehensive call tracking and logging systems for business communication management.',
     credentials: {
