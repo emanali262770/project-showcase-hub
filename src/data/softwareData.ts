@@ -136,13 +136,13 @@ export const categories: Category[] = [
     },
     software: [
       { name: 'Infinity Byte', url: 'https://e-commerce-infinity-byte-10.vercel.app/', company: 'Infinity Byte' },
-      { name: 'Core Tech', url: 'https://core-tech-ecommerce-beta.vercel.app/', company: 'Core Tech' },
+      { name: 'Core Tech', url: 'https://core-tech-ecommerce.vercel.app/', company: 'Core Tech' },
       { name: 'Sky Links', url: 'https://sky-link-e-commerce.vercel.app/', company: 'Sky Links' },
     ],
   },
   {
     id: 'calllogs',
-    title: 'Call Logs',
+    title: 'CRM',
     icon: 'Phone',
     description: 'Comprehensive call tracking and logging systems for business communication management.',
     credentials: {
